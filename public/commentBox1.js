@@ -3,7 +3,7 @@ var CommentBox = React.createClass({
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList/>
+        <CommentList data={this.props.data}/>
         <CommentForm/>
       </div>
     );
@@ -12,10 +12,17 @@ var CommentBox = React.createClass({
 
 var CommentList = React.createClass({
     render: function(){
+        var commentNodes = this.props.data.map(function(comment) {
+            return (
+                <Comment author={comment.author} key={comment.id}>
+                    {comment.text}
+                </Comment>
+            );
+        });
         return(
             <div className = "commentList">
-            <Comment author="Mr. California">I am the King Lizard</Comment>
-            <Comment author="Ron Swanson">I do what I want</Comment>
+            <Comment author="Rick Sanchez">I always wanted to know how... plumbuses were made</Comment>
+            {commentNodes}
             </div>
         );
     }
@@ -32,19 +39,30 @@ var CommentForm = React.createClass({
 });
 
 var Comment = React.createClass({
-   render: function(){
+   rawMarkup: function() {
+    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+    return { __html: rawMarkup };
+  },
+    
+    render: function(){
     return(
         <div className="comment">
             <h2 className="commentAuthor">Author</h2>
             {this.props.author}
             <h2>Comment</h2>
-            {this.props.children}
+            <span dangerouslySetInnerHTML={this.rawMarkup()} />
         </div>
     );
    }
 });
 
+var dataPassed = [
+    { id: 1, author: "Robert California", text: "I am the *Lizard* King"},
+    { id: 2, author: "Ron Swanson", text: "I do whar I want"}
+    
+];
+
 ReactDOM.render(
-  <CommentBox />,
+  <CommentBox data={dataPassed}/>,
   document.getElementById('content')
 );
