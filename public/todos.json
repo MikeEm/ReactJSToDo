@@ -1,0 +1,6 @@
+[
+    { thingToDo: "Wake up", isChecked: true},
+    { thingToDo: "Fall out of bed", isChecked: true},
+    { thingToDo: "Drag a comb across my head", isChecked: false},
+    { thingToDo: "Make a toast and drink a cup", isChecked: false}
+]

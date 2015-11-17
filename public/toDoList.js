@@ -1,5 +1,29 @@
 var TodoBox = React.createClass({
-  render: function(){
+    loadCommentsFromServer: function() {
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          cache: false,
+          success: function(data) {
+            this.setState({data: data});
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+    //Sets up initial state of the component
+    getInitialState: function() {
+        return {data: []};
+    },
+    
+    componentDidMount: function() {
+        this.loadCommentsFromServer();
+        setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    },
+    
+    //Have to make it work with {this.state.data}
+    render: function(){
     return(
         <div className="todoBox">
         <h1> To Do List : </h1>
@@ -52,9 +76,9 @@ var TodoForm = React.createClass({
 });
 
 var dataPassed = [
-    { id: 1, thingToDo: "Wake up"},
-    { id: 2, thingToDo: "Fall out of bed"},
-    { id: 3, thingToDo: "Drag a comb across my head"}
+    { id: 1, thingToDo: "Wake up", isChecked: true},
+    { id: 2, thingToDo: "Fall out of bed", isChecked: true},
+    { id: 3, thingToDo: "Drag a comb across my head", isChecked: false}
 ];
 
 ReactDOM.render(

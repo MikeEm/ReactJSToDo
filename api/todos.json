@@ -1,0 +1,5 @@
+[
+    { id: 1, thingToDo: "Wake up", isChecked: true},
+    { id: 2, thingToDo: "Fall out of bed", isChecked: true},
+    { id: 3, thingToDo: "Drag a comb across my head", isChecked: false}
+]
