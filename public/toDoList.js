@@ -12,6 +12,22 @@ var TodoBox = React.createClass({
           }.bind(this)
         });
     },
+    
+    handleTodoSubmit: function(todo) {
+     $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
+      data: todo,
+      success: function(data) {
+        this.setState({data: data});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+    },
+    
     //Sets up initial state of the component
     getInitialState: function() {
         return {data: []};
@@ -27,8 +43,8 @@ var TodoBox = React.createClass({
     return(
         <div className="todoBox">
         <h1> To Do List : </h1>
-        <TodoList data={this.props.data}/>
-        <TodoForm/>
+        <TodoList data={this.state.data}/>
+        <TodoForm onTodoSubmit={this.handleTodoSubmit}/>
         </div>
     );    
   }
@@ -38,7 +54,7 @@ var TodoList = React.createClass({
   render: function(){
     var todoNodes = this.props.data.map(function(todo){
         return(
-            <Todo>{todo.thingToDo}</Todo>
+            <Todo>{todo.task}</Todo>
         );
     });
     return(
@@ -66,22 +82,34 @@ var Todo = React.createClass ({
 });
 
 var TodoForm = React.createClass({
-   render: function(){
+   handleSubmit: function(e) {
+    e.preventDefault();
+    var task = this.refs.task.value.trim();
+    if (!task) {
+      return;
+    }
+    // TODO: send request to the server
+    this.props.onTodoSubmit({task: task});
+    this.refs.task.value = '';
+    return;
+  },
+    render: function(){
     return(
-        <div className="TodoForm">
-        Here will be the TodoForm
-        </div>
+        <form className="TodoForm" onSubmit={this.handleSubmit}>
+            <input type="text" placeholder="Add a new task" ref="task"/>
+            <input type="submit" value="Add Task"/>
+        </form>
         );
    }
 });
 
 var dataPassed = [
-    { id: 1, thingToDo: "Wake up", isChecked: true},
-    { id: 2, thingToDo: "Fall out of bed", isChecked: true},
-    { id: 3, thingToDo: "Drag a comb across my head", isChecked: false}
+    { id: 1, task: "Wake up", isChecked: true},
+    { id: 2, task: "Fall out of bed", isChecked: true},
+    { id: 3, task: "Drag a comb across my head", isChecked: false}
 ];
 
 ReactDOM.render(
-  <TodoBox data={dataPassed}/>,
+  <TodoBox url="todos" pollInterval={2000}/>,
   document.getElementById('content')
 );
