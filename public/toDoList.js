@@ -41,11 +41,20 @@ var TodoBox = React.createClass({
     //Have to make it work with {this.state.data}
     render: function(){
     
+    var todoListNodes = this.state.data.map(function(todoList) {
+           return(
+            <TodoList data={todoList.tasks}>
+            <h2>{todoList.todoListName}</h2>
+            </TodoList>
+            );
+        });    
+        
     return(
         <div className="todoBox">
         <h1> To Do List : </h1>
-        <TodoList data={this.state.data}/>
-        <TodoForm onTodoSubmit={this.handleTodoSubmit}/>
+        {todoListNodes}
+        <br/>
+        <TodoListForm onTodoSubmit={this.handleTodoSubmit}/>
         </div>
     );    
   }
@@ -60,7 +69,9 @@ var TodoList = React.createClass({
     });
     return(
         <div className="todoList">
+        <h3>{this.props.children}</h3>
             {todoNodes}
+        <TodoForm/>
         </div>
     );
   }
@@ -99,6 +110,17 @@ var TodoForm = React.createClass({
         <form className="TodoForm" onSubmit={this.handleSubmit}>
             <input type="text" placeholder="Add a new task" ref="task"/>
             <input type="submit" value="Add Task"/>
+        </form>
+        );
+   }
+});
+
+var TodoListForm = React.createClass({
+   render: function(){
+    return(
+        <form className="TodoListForm" >
+            <input type="text" placeholder="Name your new List" ref="task"/>
+            <input type="submit" value="Create List"/>
         </form>
         );
    }
