@@ -1,6 +1,5 @@
 [
-    { thingToDo: "Wake up", isChecked: true},
-    { thingToDo: "Fall out of bed", isChecked: true},
-    { thingToDo: "Drag a comb across my head", isChecked: false},
-    { thingToDo: "Find my way downstairs", isChecked: false}
+    { "id": 1, "task": "Wake up", "isChecked": true},
+    { "id": 2, "task": "Fall out of bed", "isChecked": true},
+    { "id": 3, "task": "Drag a comb across my head", "isChecked": false}
 ]

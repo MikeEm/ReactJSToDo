@@ -10,7 +10,7 @@ var TodoBox = React.createClass({
           error: function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
           }.bind(this)
-        });
+        });      
     },
     
     handleTodoSubmit: function(todo) {
@@ -40,6 +40,7 @@ var TodoBox = React.createClass({
     
     //Have to make it work with {this.state.data}
     render: function(){
+    
     return(
         <div className="todoBox">
         <h1> To Do List : </h1>
@@ -54,7 +55,7 @@ var TodoList = React.createClass({
   render: function(){
     var todoNodes = this.props.data.map(function(todo){
         return(
-            <Todo>{todo.task}</Todo>
+            <Todo key={todo.id}>{todo.task}</Todo>
         );
     });
     return(
@@ -103,13 +104,15 @@ var TodoForm = React.createClass({
    }
 });
 
+
 var dataPassed = [
-    { id: 1, task: "Wake up", isChecked: true},
-    { id: 2, task: "Fall out of bed", isChecked: true},
-    { id: 3, task: "Drag a comb across my head", isChecked: false}
+    { "id": 1, "task": "Wake up", "isChecked": true},
+    { "id": 2, "task": "Fall out of bed", "isChecked": true},
+    { "id": 3, "task": "Drag a comb across my head", "isChecked": false}
 ];
 
 ReactDOM.render(
-  <TodoBox url="todos" pollInterval={2000}/>,
+    <TodoBox url="todos.json" pollInterval={2000}/>,
+    //<TodoBox data={dataPassed}/>,
   document.getElementById('content')
 );

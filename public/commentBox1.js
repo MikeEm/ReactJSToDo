@@ -21,7 +21,7 @@ var CommentBox = React.createClass({
   },  
     render: function() {
     return (
-      <div className="commentBox">
+      <div className="commentBox" class="commentBox">
         <h1>Comments</h1>
         <CommentList data={this.state.data}/>
         <CommentForm/>
@@ -83,6 +83,6 @@ var dataPassed = [
 ];
 
 ReactDOM.render(
-  <CommentBox url="comments" pollInterval={2000} />,
+  <CommentBox url="comments.json" pollInterval={2000} />,
   document.getElementById('content')
 );
