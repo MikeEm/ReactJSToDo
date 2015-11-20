@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "todoListName": "A day in the life",
+        "tasks": [
+            {
+                "id": 1,
+                "task": "Wake up",
+                "isChecked": "checked"
+            },
+            {
+                "id": 2,
+                "task": "Fall out of bed",
+                "isChecked": "unchecked"
+            },
+            {
+                "id": 3,
+                "task": "Drag a comb across my head",
+                "isChecked": "unchecked"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "todoListName": "Breath",
+        "tasks": [
+            {
+                "id": 1,
+                "task": "Breath in the air",
+                "isChecked": "checked"
+            },
+            {
+                "id": 2,
+                "task": "Don't be afraid to care",
+                "isChecked": "unchecked"
+            },
+            {
+                "id": 3,
+                "task": "Leave but don't leave me",
+                "isChecked": "unchecked"
+            }
+        ]
+    }
+]

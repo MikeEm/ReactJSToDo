@@ -13,7 +13,7 @@ var TodoBox = React.createClass({
         });      
     },
     
-    handleTodoSubmit: function(todo) {
+    handleTodoListSubmit: function(todo) {
      $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -27,6 +27,8 @@ var TodoBox = React.createClass({
       }.bind(this)
     });
     },
+    
+    
     
     //Sets up initial state of the component
     getInitialState: function() {
@@ -43,7 +45,7 @@ var TodoBox = React.createClass({
     
     var todoListNodes = this.state.data.map(function(todoList) {
            return(
-            <TodoList data={todoList.tasks}>
+            <TodoList data={todoList.tasks} key={todoList.id}>
             <h2>{todoList.todoListName}</h2>
             </TodoList>
             );
@@ -54,14 +56,29 @@ var TodoBox = React.createClass({
         <h1> To Do List : </h1>
         {todoListNodes}
         <br/>
-        <TodoListForm onTodoSubmit={this.handleTodoSubmit}/>
+        <TodoListForm onTodoListSubmit={this.handleTodoListSubmit}/>
         </div>
     );    
   }
 });
 
 var TodoList = React.createClass({
-  render: function(){
+    handleTaskSubmit: function(task) {
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          type: 'POST',
+          data: task,
+          success: function(data) {
+            this.setState({data: data});
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+          }.bind(this)
+        });
+    },
+    
+    render: function(){
     var todoNodes = this.props.data.map(function(todo){
         return(
             <Todo key={todo.id}>{todo.task}</Todo>
@@ -71,7 +88,7 @@ var TodoList = React.createClass({
         <div className="todoList">
         <h3>{this.props.children}</h3>
             {todoNodes}
-        <TodoForm/>
+        <TodoForm onTaskSubmit={this.handleTaskSubmit}/>
         </div>
     );
   }
@@ -94,21 +111,10 @@ var Todo = React.createClass ({
 });
 
 var TodoForm = React.createClass({
-   handleSubmit: function(e) {
-    e.preventDefault();
-    var task = this.refs.task.value.trim();
-    if (!task) {
-      return;
-    }
-    // TODO: send request to the server
-    this.props.onTodoSubmit({task: task});
-    this.refs.task.value = '';
-    return;
-  },
     render: function(){
     return(
         <form className="TodoForm" onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Add a new task" ref="task"/>
+            <input type="text" placeholder="Add a new task" />
             <input type="submit" value="Add Task"/>
         </form>
         );
@@ -116,25 +122,36 @@ var TodoForm = React.createClass({
 });
 
 var TodoListForm = React.createClass({
+    getInitialState: function() {
+        return {todoListName: ''};
+    },
+    handleTodoListNameChange: function(e) {
+        this.setState({"todoListName": e.target.value});
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        var todoListName = this.state.todoListName.trim();
+        if (!todoListName) {
+          return;
+        }
+        this.props.onTodoListSubmit({todoListName: todoListName});
+        this.setState({"todoListName": ''});
+    },
+    
    render: function(){
     return(
-        <form className="TodoListForm" >
-            <input type="text" placeholder="Name your new List" ref="task"/>
+        <form className="todoListForm" onSubmit={this.handleSubmit}>
+            <input type="text" placeholder="Name your List" value={this.state.todoListName} onChange={this.handleTodoListNameChange}/>
             <input type="submit" value="Create List"/>
         </form>
-        );
+    );
    }
 });
 
-
-var dataPassed = [
-    { "id": 1, "task": "Wake up", "isChecked": true},
-    { "id": 2, "task": "Fall out of bed", "isChecked": true},
-    { "id": 3, "task": "Drag a comb across my head", "isChecked": false}
-];
+/*var fs = require("fs");*/
 
 ReactDOM.render(
-    <TodoBox url="todos.json" pollInterval={2000}/>,
+    <TodoBox url="api/todos" pollInterval={20000}/>,
     //<TodoBox data={dataPassed}/>,
   document.getElementById('content')
 );
