@@ -1,0 +1,7 @@
+You will need to start the server for the POST query to work.
+To start the server, you need to have nodejs installed.
+
+Then, in this directory, enter the commands:
+
+>npm install
+>node server.js
