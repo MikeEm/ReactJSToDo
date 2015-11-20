@@ -67,7 +67,7 @@ var TodoList = React.createClass({
         $.ajax({
           url: this.props.url,
           dataType: 'json',
-          type: 'POST',
+          type: 'PUT',
           data: task,
           success: function(data) {
             this.setState({data: data});
@@ -111,10 +111,27 @@ var Todo = React.createClass ({
 });
 
 var TodoForm = React.createClass({
+    getInitialState: function() {
+        return {todoListName: '{this.props.todoListName}', task: ''};
+    },
+    handleTaskChange: function(e) {
+        this.setState({"task": e.target.value});
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        var task = this.state.task.trim();
+        if (!task) {
+          return;
+        }
+        this.props.onTaskSubmit({task: task});
+        this.setState({"task": ''});
+    },
+    
+    
     render: function(){
     return(
         <form className="TodoForm" onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="Add a new task" />
+            <input type="text" placeholder="Add a new task" value={this.state.task} onChange={this.handleTaskChange}/>
             <input type="submit" value="Add Task"/>
         </form>
         );

@@ -50,6 +50,40 @@ app.post('/api/todos', function(req, res) {
   });
 });
 
+app.put('/api/todos', function(req, res) {
+  fs.readFile(TODOS_FILE, function(err, data) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    var todoLists = JSON.parse(data);
+    // NOTE: In a real implementation, we would likely rely on a database or
+    // some other approach (e.g. UUIDs) to ensure a globally unique id. We'll
+    // treat Date.now() as unique-enough for our purposes.
+    var newTask = {
+      id: Date.now(),
+      task: req.body.task,
+      isChecked: false,
+    };
+      
+    for (var i=0; i<todoLists.length; i++)
+    {
+        if (todoLists[i].todoListName == req.body.todoListName)
+        {
+            todoLists[i].tasks.push(newTask);
+        }
+    }
+    fs.writeFile(TODOS_FILE, JSON.stringify(todoLists, null, 4), function(err) {
+      if (err) {
+        console.error(err);
+        process.exit(1);
+      }
+      res.setHeader('Cache-Control', 'no-cache');
+      res.json(todoLists);
+    });
+  });
+});
+
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
